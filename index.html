@@ -235,12 +235,20 @@
     }
     .flowSVG{
       position:absolute; inset:0; width:100%; height:100%; display:block;
-      z-index:2; pointer-events:none;
+      z-index:6; pointer-events:none;
     }
     .flowArrow{
-      stroke:#1c5a7d; stroke-width:4.5; fill:none;
-      stroke-linecap:round; stroke-linejoin:round;
-      marker-end:url(#arrowHead);
+      fill:none;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+    .flowArrowTop{
+      stroke:#ef2b2d; stroke-width:4.8;
+      marker-end:url(#arrowHeadRed);
+    }
+    .flowArrowBottom{
+      stroke:#1c5a7d; stroke-width:4.8;
+      marker-end:url(#arrowHeadBlue);
     }
 
     .node{
@@ -400,16 +408,19 @@
                       <div class="flowWrap">
                         <svg class="flowSVG" viewBox="0 0 760 270" preserveAspectRatio="none" aria-hidden="true">
                           <defs>
-                            <marker id="arrowHead" markerWidth="6" markerHeight="6" refX="5.5" refY="3" orient="auto">
+                            <marker id="arrowHeadRed" markerWidth="6" markerHeight="6" refX="4.5" refY="3" orient="auto">
+                              <polygon points="0,0 6,3 0,6" fill="#ef2b2d"></polygon>
+                            </marker>
+                            <marker id="arrowHeadBlue" markerWidth="6" markerHeight="6" refX="4.5" refY="3" orient="auto">
                               <polygon points="0,0 6,3 0,6" fill="#1c5a7d"></polygon>
                             </marker>
                           </defs>
-                          <!-- top arrows directly under top label boxes -->
-                          <line class="flowArrow" x1="176" y1="96" x2="282" y2="96"></line>
-                          <line class="flowArrow" x1="422" y1="96" x2="528" y2="96"></line>
-                          <!-- bottom arrows directly above bottom label boxes -->
-                          <line class="flowArrow" x1="282" y1="152" x2="176" y2="152"></line>
-                          <line class="flowArrow" x1="528" y1="152" x2="422" y2="152"></line>
+                          <!-- top arrows: drawn to the circle edges so the tips are visible -->
+                          <line class="flowArrow flowArrowTop" x1="178" y1="96" x2="314" y2="96"></line>
+                          <line class="flowArrow flowArrowTop" x1="454" y1="96" x2="590" y2="96"></line>
+                          <!-- bottom arrows: drawn to the circle edges so the tips are visible -->
+                          <line class="flowArrow flowArrowBottom" x1="314" y1="112" x2="178" y2="112"></line>
+                          <line class="flowArrow flowArrowBottom" x1="590" y1="112" x2="454" y2="112"></line>
                         </svg>
 
                         <div class="node" style="left:48px; top:42px;">
