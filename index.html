@@ -498,7 +498,7 @@
                 <div class="rewardPetName">Magical Strange Hullababoo!</div>
                 <div class="rewardPetHint">It gains outfit details like a scarf and a wand/star accessory.</div>
               </div>
-              <button class="btn primary" id="btnRewardPlayAgain" type="button">Play Again</button>
+              <button class="btn primary" id="btnRewardPlayAgain" type="button">Continue to Stage Map</button>
             </div>
           </div>
         </div></div>
@@ -626,6 +626,7 @@
     els.rewardPage.hidden = false;
     els.rewardPage.classList.add('show');
     await play('tada');
+    queueStageComplete(6, 1800);
     requestAnimationFrame(fitToViewport);
   }
   function updateMissionUI(){
@@ -663,6 +664,46 @@
   }
   els.btnUnlock.addEventListener('click', unlockAudio);
   window.addEventListener('pointerdown', ()=>{ if(!audioUnlocked) unlockAudio(); }, {once:true, passive:true});
+
+  let stageCompleteSent = false;
+  let stageCompleteTimer = null;
+  function signalStageComplete(stageNumber){
+    if(stageCompleteSent) return;
+    stageCompleteSent = true;
+    try {
+      const key = 'monsterQuest_highestCompleted';
+      const current = Number(localStorage.getItem(key) || 0);
+      if (stageNumber > current) localStorage.setItem(key, String(stageNumber));
+      localStorage.setItem('monsterQuest_justUnlocked', String(Math.min(8, stageNumber + 1)));
+    } catch (e) {}
+
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({
+          type: 'monster-quest-stage-complete',
+          stage: stageNumber,
+          nextStage: Math.min(8, stageNumber + 1)
+        }, '*');
+        return;
+      }
+    } catch (e) {}
+
+    try {
+      const hubCandidates = [
+        './monster-quest-stage-hub-return-to-map.html?completed=' + stageNumber,
+        './monster-quest-stage-hub.html?completed=' + stageNumber,
+        '../monster-quest-stage-hub-return-to-map.html?completed=' + stageNumber,
+        '../monster-quest-stage-hub.html?completed=' + stageNumber
+      ];
+      window.location.href = hubCandidates[0];
+    } catch (e) {}
+  }
+
+  function queueStageComplete(stageNumber, delayMs){
+    if(stageCompleteSent) return;
+    clearTimeout(stageCompleteTimer);
+    stageCompleteTimer = setTimeout(()=>signalStageComplete(stageNumber), Math.max(0, delayMs || 0));
+  }
 
   function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
   function parseWhole(v){
@@ -1012,15 +1053,7 @@
     fitToViewport();
   });
   els.btnCheck.addEventListener('click', check);
-  els.btnRewardPlayAgain.addEventListener('click', ()=>{
-    solvedCount = 0;
-    state = makeVariation();
-    renderProblemText();
-    renderLabelBank();
-    resetInputs();
-    fitToViewport();
-    clearWorking();
-  });
+  els.btnRewardPlayAgain.addEventListener('click', ()=>signalStageComplete(6));
   window.addEventListener('resize', ()=>{ fitToViewport(); resizeConfetti(); });
 
   /* Working canvas */
