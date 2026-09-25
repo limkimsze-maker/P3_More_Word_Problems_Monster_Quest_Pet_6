@@ -384,7 +384,65 @@
       transform: translateY(0);
     }
   </style>
-<!-- Main Page Small Chromebook Fit Patch — paste once before </head> -->
+<!-- Main Page Small Chromebook Fit Patch — paste once before 
+  <style id="monster-quest-mobile-working-space-fix">
+    @media (max-width:1100px){
+      html,body{
+        height:auto !important;
+        min-height:100% !important;
+        overflow-x:hidden !important;
+        overflow-y:auto !important;
+      }
+      body{
+        padding-bottom:calc(110px + env(safe-area-inset-bottom)) !important;
+      }
+      .app{
+        height:auto !important;
+        min-height:100dvh !important;
+        overflow:visible !important;
+      }
+      .main{
+        overflow:visible !important;
+        padding-bottom:calc(28px + env(safe-area-inset-bottom)) !important;
+      }
+      #toolsCard{
+        min-height:520px !important;
+        height:auto !important;
+        overflow:visible !important;
+        margin-bottom:calc(70px + env(safe-area-inset-bottom)) !important;
+      }
+      #workPanelBd{
+        height:auto !important;
+        min-height:440px !important;
+        overflow:visible !important;
+        display:flex !important;
+        flex-direction:column !important;
+      }
+      .workCard{
+        flex:0 0 auto !important;
+        min-height:340px !important;
+        height:340px !important;
+      }
+      .workCanvasWrap{
+        flex:0 0 auto !important;
+        min-height:340px !important;
+        height:340px !important;
+        display:flex !important;
+      }
+      #workCanvas{
+        width:100% !important;
+        height:340px !important;
+        min-height:340px !important;
+        display:block !important;
+        pointer-events:auto !important;
+        touch-action:none !important;
+      }
+      .back-main-btn{
+        bottom:calc(84px + env(safe-area-inset-bottom)) !important;
+      }
+    }
+  </style>
+</head> -->
 <script id="main-small-chromebook-fit-detector">
 (function(){
   function applyMainSmallChromebookMode(){
