@@ -1396,11 +1396,45 @@
   els.btnUnlock.addEventListener('click', unlockAudio);
   window.addEventListener('pointerdown', ()=>{ if(!audioUnlocked) unlockAudio(); }, {once:true, passive:true});
 
+  const MQ_STAGE_PARAMS = new URLSearchParams(window.location.search || '');
+  const IS_FREE_PRACTICE =
+    MQ_STAGE_PARAMS.get('freepractice') === '1' ||
+    MQ_STAGE_PARAMS.get('tryany') === '1' ||
+    MQ_STAGE_PARAMS.get('practice') === '1';
+
   let stageCompleteSent = false;
   let stageCompleteTimer = null;
   function signalStageComplete(stageNumber){
     if(stageCompleteSent) return;
     stageCompleteSent = true;
+
+    // Try Any Topic is practice only. It must never change Journey progression.
+    if(IS_FREE_PRACTICE){
+      try{
+        if(window.parent && window.parent !== window){
+          window.parent.postMessage({
+            type: 'monster-quest-return-main',
+            stage: stageNumber,
+            reason: 'free-practice-complete'
+          }, '*');
+          return;
+        }
+      }catch(e){}
+
+      const practiceReturnUrl =
+        'https://limkimsze-maker.github.io/P3_More_Word_Problems_Monster_Quest_Main_Page/?mq_return=stage'
+        + stageNumber + '&reason=freepractice&ts=' + Date.now();
+      try{
+        if(window.top && window.top !== window){
+          window.top.location.replace(practiceReturnUrl);
+        }else{
+          window.location.replace(practiceReturnUrl);
+        }
+      }catch(e){
+        try{ window.location.href = practiceReturnUrl; }catch(_){}
+      }
+      return;
+    }
 
     try {
       const key = 'monsterQuest_highestCompleted';
